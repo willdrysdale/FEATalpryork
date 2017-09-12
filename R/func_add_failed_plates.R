@@ -15,7 +15,16 @@ add_failed_plates = function(results, image_dir){
   
   verify_plate = function(plate){
     plate = toupper(plate)
-    shift_chars = c("!",'"',"£","$","%","^","*","(",")")
+    shift_chars = c("!",
+                    '"',
+                    "£",
+                    "$",
+                    "%",
+                    "^",
+                    "*",
+                    "(",
+                    ")"
+                    )
     if(any(shift_chars %in% str_split(plate,"")[[1]])){
       plate = gsub("!","1",plate)
       plate = gsub('"',"2",plate)
