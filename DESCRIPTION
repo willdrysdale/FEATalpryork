@@ -9,5 +9,6 @@ URL: https://github.com/willdrysdale/york_FEAT_APLR
 Depends: 
 	EBImage,
 	curl,
-	jsonlite
+	jsonlite,
+	stringr
 RoxygenNote: 6.0.1
