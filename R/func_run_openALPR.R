@@ -101,17 +101,7 @@ run_openALPR = function(secret_key,country = "eu",image_dir){
   unq_rp1 = result_pass1[result_pass1$image %in% pass1,]
   unq_rp1$pass = 1
   results = rbind(unq_rp1,unq_rp2,unq_rp3)
-  
-  results_dup =  results[duplicated(results$image) | duplicated(results$image,fromLast = T),]
-  image_dup = unique(results_dup$image)
-  
-  #When two plates have been returned for one image, keep the one with the higest confidence
-  for (i in 1:length(image_dup)){
-    tmp_dup = results_dup[results_dup$image == image_dup[i],]
-    max_conf = max(tmp_dup$confidence)
-    keep_plate = tmp_dup$plate[tmp_dup$confidence == max_conf]
-    results = results[-(!(results$plate == keep_plate) & (results$image == image_dup[i])),]
-  }
+
   #return
   results
 }
