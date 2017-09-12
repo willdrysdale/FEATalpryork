@@ -4,5 +4,5 @@ To install:
 
 ```
 # Install package
-devtools::install_github("willdrysdale/yorkFEATalpr")
+devtools::install_github("willdrysdale/FEATalpryork")
 ```
