@@ -1,3 +1,7 @@
+#R Studio Files
+.Rhistory
+.Rdata
+
 # Windows image file caches
 Thumbs.db
 ehthumbs.db
