@@ -1,5 +1,5 @@
 Package: yorkFEATALPR
-Version: 0.0.1
+Version: 0.0.2
 Date: 2017-09-11
 Title: York FEAT Automatic Lisence Plate Recognition 
 Decription: Used by the UoY FEAT team to perform ALPR using the cloudALPR API
