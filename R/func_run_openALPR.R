@@ -34,9 +34,9 @@ run_openALPR = function(secret_key,country = "eu",image_dir){
     dir.create(("img_cropped"))
   
   for (i in 1:length(image_files)){
-    image = readImage(paste(image_dir,image_files,sep = ""))
+    image = readImage(paste(image_dir,image_files[i],sep = ""))
     image = image[,30:220,,]
-    writeImage(image,paste("img_cropped/",image_files,sep = ""))
+    writeImage(image,paste("img_cropped/",image_files[i],sep = ""))
   }
   
   #API Request Loop - parse 1
@@ -45,7 +45,6 @@ run_openALPR = function(secret_key,country = "eu",image_dir){
     image = paste("img_cropped/",image_files[i],sep = "")
     temp_content =  openALPR_request(secret_key,country,image)
     responses1[[i]] = temp_content
-    Sys.sleep(0.5)
   }
   rm(temp_content)
   
@@ -71,7 +70,6 @@ run_openALPR = function(secret_key,country = "eu",image_dir){
     image = paste("img_corr/",low_conf_image[i],sep = "")
     temp_content =  openALPR_request(secret_key,country,image)
     responses2[[i]] = temp_content
-    Sys.sleep(0.5)
     }
   rm(temp_content)
   
@@ -96,7 +94,6 @@ run_openALPR = function(secret_key,country = "eu",image_dir){
     image = paste("img_corr2/",low_conf_image2[i],sep = "")
     temp_content =  openALPR_request(secret_key,country,image)
     responses3[[i]] = temp_content
-    Sys.sleep(0.5)
   }
   rm(temp_content)
   
