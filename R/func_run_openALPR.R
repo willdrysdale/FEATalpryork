@@ -45,6 +45,7 @@ run_openALPR = function(secret_key,country = "eu",image_dir){
     image = paste("img_cropped/",image_files[i],sep = "")
     temp_content =  openALPR_request(secret_key,country,image)
     responses1[[i]] = temp_content
+    Sys.sleep(0.5)
   }
   rm(temp_content)
   
@@ -70,7 +71,8 @@ run_openALPR = function(secret_key,country = "eu",image_dir){
     image = paste("img_corr/",low_conf_image[i],sep = "")
     temp_content =  openALPR_request(secret_key,country,image)
     responses2[[i]] = temp_content
-  }
+    Sys.sleep(0.5)
+    }
   rm(temp_content)
   
   result_pass2 = parse_openALPR_responses(responses2,low_conf_image)
@@ -94,6 +96,7 @@ run_openALPR = function(secret_key,country = "eu",image_dir){
     image = paste("img_corr2/",low_conf_image2[i],sep = "")
     temp_content =  openALPR_request(secret_key,country,image)
     responses3[[i]] = temp_content
+    Sys.sleep(0.5)
   }
   rm(temp_content)
   
