@@ -35,7 +35,7 @@ run_openALPR = function(secret_key,country = "eu",image_dir){
   
   for (i in 1:length(image_files)){
     image = readImage(paste(image_dir,image_files[i],sep = ""))
-    image = image[,30:220,,]
+    image = image[,30:220,]
     writeImage(image,paste("img_cropped/",image_files[i],sep = ""))
   }
   
