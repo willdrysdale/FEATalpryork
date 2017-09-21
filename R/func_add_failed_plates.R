@@ -10,6 +10,18 @@
 
 
 add_failed_plates = function(results, image_dir){
+  #convert factors to strings
+  if(class(results$plate) == "factor")
+    results$plate = as.character(results$plate)
+  
+  if(class(results$image) == "factor")
+    results$image = as.character(results$image)
+  
+  if(class(results$match) == "factor")
+    results$match = as.character(results$match)
+  
+  
+  
   auto_complete = results[results$match == "y",]
   man_complete = results[results$match == "n",]
   
@@ -39,16 +51,41 @@ add_failed_plates = function(results, image_dir){
     }
     plate
   }
-
-  for (i in 1:nrow(man_complete)){
+  
+  
+  
+  col_names = c(names(results))
+                
+  if(!dir.exists("temp_failed_plates")){
+    dir.create("temp_failed_plates")
+    results_out = data.frame(matrix(ncol = 6,nrow = 0))
+    names(results_out) = col_names
+    start_row = 1
+  }else{
+    results_out = read.csv("temp_failed_plates/temp_results_out.csv",stringsAsFactors = F)
+    start_row = nrow(results_out)+1
+  }
+  
+  for (i in start_row:nrow(man_complete)){
+    temp = data.frame(matrix(ncol = 6,nrow = 0))
+    names(temp) = col_names
+    
     image_path = paste(image_dir,man_complete$image[i],sep = "")
     display(readImage(image_path),"raster")
     j = readline(prompt = "Please type numberplate: ")
     j = verify_plate(j)
-    man_complete$plate[i] = j
-    man_complete$match[i] = "manual"
+    temp = man_complete[i,]
+    temp$plate[1] = j
+    temp$match[1] = "manual"
+    results_out[i,] = temp
+    write.csv(results_out,"temp_failed_plates/temp_results_out.csv",row.names = F)
   }
-  results = rbind(auto_complete,man_complete)
+  results = rbind(auto_complete,results_out)
+  
+  if(!dir.exists("results"))
+    dir.create("results")
+    write.csv(results_out,"results/man_plate_results.csv",row.names = F)
+    unlink("temp_failed_plates",recursive = T)
   #return
   results
 }

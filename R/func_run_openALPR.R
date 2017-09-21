@@ -29,10 +29,20 @@ run_openALPR = function(secret_key,country = "eu",image_dir){
   
   
   image_files = list.files(image_dir)
+  #crop images to remove red text
+  if(!dir.exists("img_cropped"))
+    dir.create(("img_cropped"))
+  
+  for (i in 1:length(image_files)){
+    image = readImage(paste(image_dir,image_files,sep = ""))
+    image = image[,30:220,,]
+    writeImage(image,paste("img_cropped/",image_files,sep = ""))
+  }
+  
   #API Request Loop - parse 1
   responses1 = list()
   for (i in 1:length(image_files)){
-    image = paste(image_dir,image_files[i],sep = "")
+    image = paste("img_cropped/",image_files[i],sep = "")
     temp_content =  openALPR_request(secret_key,country,image)
     responses1[[i]] = temp_content
   }
@@ -49,7 +59,7 @@ run_openALPR = function(secret_key,country = "eu",image_dir){
   
   #Reprocess low confidence images
   for (i in 1:length(low_conf_image)){
-    image = readImage(paste(image_dir,low_conf_image[i],sep = ""))
+    image = readImage(paste("img_cropped/",low_conf_image[i],sep = ""))
     image = (image * 4) - 0.2
     writeImage(image,paste("img_corr/",low_conf_image[i],sep = ""))
   }
@@ -74,7 +84,7 @@ run_openALPR = function(secret_key,country = "eu",image_dir){
   
   #Reprocess low confidence images2
   for (i in 1:length(low_conf_image2)){
-    image = readImage(paste(image_dir,low_conf_image2[i],sep = ""))
+    image = readImage(paste("img_cropped/",low_conf_image2[i],sep = ""))
     image = (image *2)
     writeImage(image,paste("img_corr2/",low_conf_image2[i],sep = ""))
   }
@@ -95,12 +105,19 @@ run_openALPR = function(secret_key,country = "eu",image_dir){
   pass1 = image_files[!(image_files %in% pass23)]
   
   unq_rp3 = result_pass3[result_pass3$image %in% pass3,]
-  unq_rp3$pass = 3
+  if(nrow(unq_rp3) != 0)
+    unq_rp3$pass = 3
   unq_rp2 = result_pass2[result_pass2$image %in% pass2,]
-  unq_rp2$pass = 2
+  if(nrow(unq_rp2) != 0)
+    unq_rp2$pass = 2
   unq_rp1 = result_pass1[result_pass1$image %in% pass1,]
-  unq_rp1$pass = 1
+  if(nrow(unq_rp1) != 0)
+    unq_rp1$pass = 1
   results = rbind(unq_rp1,unq_rp2,unq_rp3)
+  
+  if(!dir.exists("results"))
+    dir.create("results")
+  write.csv(results,"results/open_ALPR_results.csv",row.names = F)
 
   #return
   results
