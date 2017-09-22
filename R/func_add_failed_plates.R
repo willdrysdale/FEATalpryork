@@ -29,7 +29,7 @@ add_failed_plates = function(results, image_dir){
     plate = toupper(plate)
     shift_chars = c("!",
                     '"',
-                    "£",
+                    "\u00A3",
                     "$",
                     "%",
                     "^",
@@ -40,7 +40,7 @@ add_failed_plates = function(results, image_dir){
     if(any(shift_chars %in% str_split(plate,"")[[1]])){
       plate = gsub("!","1",plate)
       plate = gsub('"',"2",plate)
-      plate = gsub("£","3",plate)
+      plate = gsub("\u00A3","3",plate)
       plate = gsub("\\$","4",plate)
       plate = gsub("%","5",plate)
       plate = gsub("\\^","6",plate)
