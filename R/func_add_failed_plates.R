@@ -36,7 +36,7 @@ add_failed_plates = function(results, image_dir){
                     "*",
                     "(",
                     ")"
-                    )
+    )
     if(any(shift_chars %in% str_split(plate,"")[[1]])){
       plate = gsub("!","1",plate)
       plate = gsub('"',"2",plate)
@@ -55,7 +55,7 @@ add_failed_plates = function(results, image_dir){
   
   
   col_names = c(names(results))
-                
+  
   if(!dir.exists("temp_failed_plates")){
     dir.create("temp_failed_plates")
     results_out = data.frame(matrix(ncol = 6,nrow = 0))
@@ -84,8 +84,9 @@ add_failed_plates = function(results, image_dir){
   
   if(!dir.exists("results"))
     dir.create("results")
-    write.csv(results_out,"results/man_plate_results.csv",row.names = F)
-    unlink("temp_failed_plates",recursive = T)
+  write.csv(results_out,"results/man_plate_results.csv",row.names = F)
+  write.csv(results,"results/all_results.csv",row.names = F)
+  unlink("temp_failed_plates",recursive = T)
   #return
   results
 }

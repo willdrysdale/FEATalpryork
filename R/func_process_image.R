@@ -26,7 +26,7 @@ process_image = function(image_file,
   image = (image * contrast) + brightness
   
   img_name = str_split(image_file,"/") %>% 
-    ungroup()
+    unlist()
   
   img_name = img_name[length(img_name)]
   

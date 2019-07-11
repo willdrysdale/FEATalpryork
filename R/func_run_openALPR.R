@@ -18,7 +18,8 @@ run_openALPR = function(secret_key,
                         image_dir,
                         vcrop = c(30:220),
                         brightness = c(0,-0.2,0),
-                        contrast = c(1,4,2)){
+                        contrast = c(1,4,2),
+                        confidence_threshold = 90){
   
   # validate settings
   if(length(brightness) != length(contrast))
@@ -48,13 +49,16 @@ run_openALPR = function(secret_key,
   workingdir_prompt()
   
   # Locate images
-  image_files = list.files(image_dir)
+  ori_image_files = list.files(image_dir,full.names = T)
+  image_files = ori_image_files
   
   # Loop over n image processing steps
-  results = list()
   for(i in 1:length(brightness)){
     
     output_folder = paste0("img_process_",i,"/")
+    
+    if(!dir.exists(output_folder))
+      dir.create(output_folder)
     
     temp = purrr::map(.x = image_files,
                       .f = process_image,
@@ -64,36 +68,75 @@ run_openALPR = function(secret_key,
                       contrast = contrast[i]
     )
     
-    # stop croping after first run 
-    if(i == 1)
-      vcrop = NULL
-    
     # change image_files to newly processed files
-    image_files = list.files(output_folder)
+    image_files = list.files(output_folder,full.names = T)
     
     # make call to openALPR
     run_responses =  purrr::map(.x = image_files,
                                 .f = openALPR_request,
                                 secret_key = secret_key,
-                                country = country,
-                                image = .)
+                                country = country)
     
     run_results = parse_openALPR_responses(run_responses,image_files)
     
-    run_results$confidence[is.na(run_results$confidence)] = 0
-    low_confidence = run_results[(run_results$confidence < 90 | nchar(run_results$plate) < 7),]
-    low_conf_image = low_confidence$image
-    
-    if(i != length(brightness)){ # On all but the last pass, save only the high confidence results
-      results[[i]] = run_results[(run_results$confidence >= 90 | nchar(run_results$plate) >= 7),]
-    }else{ # on the last pass, save everything that is left
-      results[[i]] = run_results
+    strip_image_path = function(image_path){
+      image_path = stringr::str_split(image_path,"/")
+      n = length(image_path[[1]])
+      
+      map_chr(image_path,n)
     }
     
-    results[[i]]$pass = i # note what pass this data was generated on
+    run_results$image = strip_image_path(run_results$image)
+    
+    run_results$confidence[is.na(run_results$confidence)] = 0
+    run_results$plate[is.na(run_results$plate)] = "-999"
+    low_confidence = run_results[(run_results$confidence < confidence_threshold | nchar(run_results$plate) < 7),]
+    low_conf_image = low_confidence$image
+    
+    run_results$pass = i
+    
+    if(i == 1 & i == length(brightness)){ # if the first pass is the only pass
+      if(!dir.exists("results"))
+        dir.create("results")
+      write.csv(results,"results/open_ALPR_results.csv",row.names = F)
+      return(run_results)
+    }
+    
+    if(i == 1 & i != length(brightness)){ # if this is the first pass, but not the last
+      results = run_results[(run_results$confidence >= confidence_threshold & nchar(run_results$plate) >= 7),]
+    }
+    
+    if(i != 1 & i != length(brightness)){ # if this is not the first pass, or the last pass
+      temp = run_results[(run_results$confidence >= confidence_threshold & nchar(run_results$plate) >= 7),]
+      results = dplyr::bind_rows(results,temp)
+    }
+    
+    if(i != 1 & i == length(brightness)){ # if this is the last pass
+      results = dplyr::bind_rows(results,run_results)
+    }
+    
+    if(length(low_conf_image) == 0){
+      if(!dir.exists("results"))
+        dir.create("results")
+      write.csv(results,"results/open_ALPR_results.csv",row.names = F)
+      return(results)
+    }else{
+      image_files = ori_image_files[strip_image_path(ori_image_files) %in% low_conf_image]
+    }
     
   }
   
+  if(!dir.exists("results"))
+    dir.create("results")
+  write.csv(results,"results/open_ALPR_results.csv",row.names = F)
+  
   # Return
-  bind_rows(results)
+  results
 }
+
+
+
+
+
+
+

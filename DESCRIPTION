@@ -12,6 +12,6 @@ Depends:
 	curl,
 	jsonlite,
 	stringr,
-	magrittr,
+	dplyr,
 	purrr
 RoxygenNote: 6.1.1

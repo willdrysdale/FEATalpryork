@@ -5,7 +5,8 @@
 \title{Run openAPLR}
 \usage{
 run_openALPR(secret_key, country = "eu", image_dir, vcrop = c(30:220),
-  brightness = c(0, -0.2, 0), contrast = c(1, 4, 2))
+  brightness = c(0, -0.2, 0), contrast = c(1, 4, 2),
+  confidence_threshold = 90)
 }
 \arguments{
 \item{secret_key}{openALPR API secret key}

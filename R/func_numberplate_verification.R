@@ -44,7 +44,9 @@ number_plate_match = function(results,img_dir){
     results_out = read.csv("temp_plate_match/temp_results_out.csv",stringsAsFactors = F)
     start_row = nrow(results_out)+1
   }
-
+  
+  results$plate[results$plate == "-999"] = NA
+  
   #Loop over all images, calling verification function
   for (i in start_row:nrow(results)){
     temp = data.frame(matrix(ncol = 6,nrow = 0))
