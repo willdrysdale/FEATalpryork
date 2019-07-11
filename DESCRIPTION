@@ -1,14 +1,17 @@
 Package: yorkFEATALPR
-Version: 0.0.2
-Date: 2017-09-11
+Version: 0.0.3
+Date: 2019-07-11
 Title: York FEAT Automatic Lisence Plate Recognition 
 Decription: Used by the UoY FEAT team to perform ALPR using the cloudALPR API
 Author: Will S Drysdale
 Maintainer: Will S Drysdale <willdrysdale@googlemail.com>
 URL: https://github.com/willdrysdale/york_FEAT_APLR
+Encoding: UTF-8
 Depends: 
 	EBImage,
 	curl,
 	jsonlite,
-	stringr
-RoxygenNote: 6.0.1
+	stringr,
+	magrittr,
+	purrr
+RoxygenNote: 6.1.1

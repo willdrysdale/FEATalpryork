@@ -4,7 +4,8 @@
 \alias{run_openALPR}
 \title{Run openAPLR}
 \usage{
-run_openALPR(secret_key, country = "eu", image_dir)
+run_openALPR(secret_key, country = "eu", image_dir, vcrop = c(30:220),
+  brightness = c(0, -0.2, 0), contrast = c(1, 4, 2))
 }
 \arguments{
 \item{secret_key}{openALPR API secret key}
@@ -12,6 +13,12 @@ run_openALPR(secret_key, country = "eu", image_dir)
 \item{country}{openALPR plate country code, default "eu"}
 
 \item{image_dir}{directory where image files are stored}
+
+\item{vcrop}{vertical crop range to "letterbox" image - default 30:220}
+
+\item{brightness}{vector to add or subract to adjust image brightness via EBImage - default c(0,-0.2,0)}
+
+\item{contrast}{vector to multiply by to adjust image contrat via EBImage - default c(1,4,2)}
 }
 \description{
 Runs FEAT images though the openALPR system and outputs a respose ready to be parsed through verification steps
