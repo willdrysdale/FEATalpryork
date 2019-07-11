@@ -6,7 +6,7 @@ An R package used by the UoY FEAT team to perform ALPR using the openALPR API
 #Install Package
 library(devtools)
 
-install_github("willdrysdale/FEATalpryork")
+install_github("willdrysdale/FEATalpryork",ref = "deve")
 ```
 
 
